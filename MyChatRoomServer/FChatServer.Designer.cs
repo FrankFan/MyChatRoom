@@ -38,6 +38,7 @@
             this.btnSend = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.lbOnline = new System.Windows.Forms.ListBox();
+            this.btnSendToAll = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -128,6 +129,16 @@
             this.lbOnline.Size = new System.Drawing.Size(130, 208);
             this.lbOnline.TabIndex = 7;
             // 
+            // btnSendToAll
+            // 
+            this.btnSendToAll.Location = new System.Drawing.Point(342, 341);
+            this.btnSendToAll.Name = "btnSendToAll";
+            this.btnSendToAll.Size = new System.Drawing.Size(75, 23);
+            this.btnSendToAll.TabIndex = 5;
+            this.btnSendToAll.Text = "群发消息";
+            this.btnSendToAll.UseVisualStyleBackColor = true;
+            this.btnSendToAll.Click += new System.EventHandler(this.btnSendToAll_Click);
+            // 
             // FChatServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -135,6 +146,7 @@
             this.ClientSize = new System.Drawing.Size(589, 399);
             this.Controls.Add(this.lbOnline);
             this.Controls.Add(this.label3);
+            this.Controls.Add(this.btnSendToAll);
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.txtMsgSend);
             this.Controls.Add(this.txtMsg);
@@ -162,6 +174,7 @@
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox lbOnline;
+        private System.Windows.Forms.Button btnSendToAll;
     }
 }
 

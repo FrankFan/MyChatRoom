@@ -71,6 +71,19 @@ namespace MyChatRoomServer
             ShowMsg(string.Format("对 {0} 说： {1}", strClientKey, strMsg));
         }
 
+        //群发消息给每个客户端
+        private void btnSendToAll_Click(object sender, EventArgs e)
+        {
+            string strMsg = txtMsgSend.Text.Trim();
+            //将要发送的消息转成utf8对应的字节数组
+            byte[] arrMsg = Encoding.UTF8.GetBytes(strMsg);
+            foreach (Socket s in dict.Values)
+            {
+                s.Send(arrMsg);
+            }
+            ShowMsg("群发完毕~ :)");
+        }
+
         /// <summary>
         /// 监听客户端请求的方法
         /// </summary>
@@ -126,6 +139,8 @@ namespace MyChatRoomServer
         {
             txtMsg.AppendText(msg + "\r\n");
         }
+
+        
 
         
     }
