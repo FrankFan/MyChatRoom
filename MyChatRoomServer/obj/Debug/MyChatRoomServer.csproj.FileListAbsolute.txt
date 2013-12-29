@@ -1,0 +1,10 @@
+E:\DevCenter\AllMyPoject\TestSolution\MyChatRoomServer\bin\Debug\MyChatRoomServer.exe
+E:\DevCenter\AllMyPoject\TestSolution\MyChatRoomServer\bin\Debug\MyChatRoomServer.pdb
+E:\DevCenter\AllMyPoject\TestSolution\MyChatRoomServer\obj\Debug\MyChatRoomServer.csprojResolveAssemblyReference.cache
+E:\DevCenter\AllMyPoject\TestSolution\MyChatRoomServer\obj\Debug\MyChatRoomServer.FChatServer.resources
+E:\DevCenter\AllMyPoject\TestSolution\MyChatRoomServer\obj\Debug\MyChatRoomServer.Properties.Resources.resources
+E:\DevCenter\AllMyPoject\TestSolution\MyChatRoomServer\obj\Debug\MyChatRoomServer.csproj.GenerateResource.Cache
+E:\DevCenter\AllMyPoject\TestSolution\MyChatRoomServer\obj\Debug\MyChatRoomServer.exe
+E:\DevCenter\AllMyPoject\TestSolution\MyChatRoomServer\obj\Debug\MyChatRoomServer.pdb
+E:\DevCenter\AllMyPoject\MyChatRoom\MyChatRoomServer\obj\Debug\MyChatRoomServer.exe
+E:\DevCenter\AllMyPoject\MyChatRoom\MyChatRoomServer\obj\Debug\MyChatRoomServer.pdb

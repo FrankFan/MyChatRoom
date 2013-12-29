@@ -1,0 +1,8 @@
+E:\DevCenter\AllMyPoject\TestSolution\WinFormApp\bin\Debug\WinFormApp.exe
+E:\DevCenter\AllMyPoject\TestSolution\WinFormApp\bin\Debug\WinFormApp.pdb
+E:\DevCenter\AllMyPoject\TestSolution\WinFormApp\obj\Debug\WinFormApp.csprojResolveAssemblyReference.cache
+E:\DevCenter\AllMyPoject\TestSolution\WinFormApp\obj\Debug\WinFormApp.Form1.resources
+E:\DevCenter\AllMyPoject\TestSolution\WinFormApp\obj\Debug\WinFormApp.Properties.Resources.resources
+E:\DevCenter\AllMyPoject\TestSolution\WinFormApp\obj\Debug\WinFormApp.csproj.GenerateResource.Cache
+E:\DevCenter\AllMyPoject\TestSolution\WinFormApp\obj\Debug\WinFormApp.exe
+E:\DevCenter\AllMyPoject\TestSolution\WinFormApp\obj\Debug\WinFormApp.pdb
