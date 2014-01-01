@@ -34,8 +34,11 @@
             this.txtIP = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtMsg = new System.Windows.Forms.TextBox();
-            this.btnSend = new System.Windows.Forms.Button();
+            this.btnSendMsg = new System.Windows.Forms.Button();
             this.txtMsgSend = new System.Windows.Forms.TextBox();
+            this.btnSendFile = new System.Windows.Forms.Button();
+            this.txtFilePath = new System.Windows.Forms.TextBox();
+            this.btnChooseFile = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnConnect
@@ -71,7 +74,7 @@
             this.txtIP.Name = "txtIP";
             this.txtIP.Size = new System.Drawing.Size(100, 21);
             this.txtIP.TabIndex = 6;
-            this.txtIP.Text = "192.168.105.114";
+            this.txtIP.Text = "192.168.0.103";
             // 
             // label1
             // 
@@ -91,15 +94,15 @@
             this.txtMsg.Size = new System.Drawing.Size(442, 211);
             this.txtMsg.TabIndex = 8;
             // 
-            // btnSend
+            // btnSendMsg
             // 
-            this.btnSend.Location = new System.Drawing.Point(464, 304);
-            this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(75, 23);
-            this.btnSend.TabIndex = 10;
-            this.btnSend.Text = "发送消息";
-            this.btnSend.UseVisualStyleBackColor = true;
-            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
+            this.btnSendMsg.Location = new System.Drawing.Point(464, 304);
+            this.btnSendMsg.Name = "btnSendMsg";
+            this.btnSendMsg.Size = new System.Drawing.Size(75, 23);
+            this.btnSendMsg.TabIndex = 10;
+            this.btnSendMsg.Text = "发送消息";
+            this.btnSendMsg.UseVisualStyleBackColor = true;
+            this.btnSendMsg.Click += new System.EventHandler(this.btnSendMsg_Click);
             // 
             // txtMsgSend
             // 
@@ -108,12 +111,44 @@
             this.txtMsgSend.Size = new System.Drawing.Size(335, 21);
             this.txtMsgSend.TabIndex = 9;
             // 
+            // btnSendFile
+            // 
+            this.btnSendFile.Location = new System.Drawing.Point(464, 345);
+            this.btnSendFile.Name = "btnSendFile";
+            this.btnSendFile.Size = new System.Drawing.Size(75, 23);
+            this.btnSendFile.TabIndex = 12;
+            this.btnSendFile.Text = "发送文件";
+            this.btnSendFile.UseVisualStyleBackColor = true;
+            this.btnSendFile.Click += new System.EventHandler(this.btnSendFile_Click);
+            // 
+            // txtFilePath
+            // 
+            this.txtFilePath.BackColor = System.Drawing.Color.White;
+            this.txtFilePath.Location = new System.Drawing.Point(97, 347);
+            this.txtFilePath.Name = "txtFilePath";
+            this.txtFilePath.ReadOnly = true;
+            this.txtFilePath.Size = new System.Drawing.Size(268, 21);
+            this.txtFilePath.TabIndex = 11;
+            // 
+            // btnChooseFile
+            // 
+            this.btnChooseFile.Location = new System.Drawing.Point(374, 345);
+            this.btnChooseFile.Name = "btnChooseFile";
+            this.btnChooseFile.Size = new System.Drawing.Size(75, 23);
+            this.btnChooseFile.TabIndex = 13;
+            this.btnChooseFile.Text = "选择文件";
+            this.btnChooseFile.UseVisualStyleBackColor = true;
+            this.btnChooseFile.Click += new System.EventHandler(this.btnChooseFile_Click);
+            // 
             // FChatRoomClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(626, 399);
-            this.Controls.Add(this.btnSend);
+            this.Controls.Add(this.btnChooseFile);
+            this.Controls.Add(this.btnSendFile);
+            this.Controls.Add(this.txtFilePath);
+            this.Controls.Add(this.btnSendMsg);
             this.Controls.Add(this.txtMsgSend);
             this.Controls.Add(this.txtMsg);
             this.Controls.Add(this.btnConnect);
@@ -136,8 +171,11 @@
         private System.Windows.Forms.TextBox txtIP;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtMsg;
-        private System.Windows.Forms.Button btnSend;
+        private System.Windows.Forms.Button btnSendMsg;
         private System.Windows.Forms.TextBox txtMsgSend;
+        private System.Windows.Forms.Button btnSendFile;
+        private System.Windows.Forms.TextBox txtFilePath;
+        private System.Windows.Forms.Button btnChooseFile;
     }
 }
 

@@ -6,9 +6,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+
 using System.Net; //IP,IPAdress(port)
 using System.Net.Sockets;
 using System.Threading;
+using System.IO;
 
 namespace MyChatRoomServer
 {
@@ -58,17 +60,24 @@ namespace MyChatRoomServer
         //发送消息到客户端
         private void btnSend_Click(object sender, EventArgs e)
         {
-            string strMsg = txtMsgSend.Text.Trim();
-            //将要发送的字符串转成UTF-8对应的字节数组
-            byte[] arrMsg = Encoding.UTF8.GetBytes(strMsg);
+            if (string.IsNullOrEmpty(lbOnline.Text))
+            {
+                MessageBox.Show("请选择要发送的好友.");
+            }
+            else
+            {
+                string strMsg = txtMsgSend.Text.Trim();
+                //将要发送的字符串转成UTF-8对应的字节数组
+                byte[] arrMsg = Encoding.UTF8.GetBytes(strMsg);
 
-            //获得列表中选中的远程IP的Key
-            string strClientKey = lbOnline.Text;
-            //通过key找到字典集合中对应的某个客户端通信的套接字，用Send方法发送数据给对方
-            dict[strClientKey].Send(arrMsg);
+                //获得列表中选中的远程IP的Key
+                string strClientKey = lbOnline.Text;
+                //通过key找到字典集合中对应的某个客户端通信的套接字，用Send方法发送数据给对方
+                dict[strClientKey].Send(arrMsg);
 
-            //socketConnection.Send(arrMsg);
-            ShowMsg(string.Format("对 {0} 说： {1}", strClientKey, strMsg));
+                //socketConnection.Send(arrMsg);
+                ShowMsg(string.Format("对 {0} 说： {1}", strClientKey, strMsg));
+            }
         }
 
         //群发消息给每个客户端
@@ -83,6 +92,7 @@ namespace MyChatRoomServer
             }
             ShowMsg("群发完毕~ :)");
         }
+
 
         /// <summary>
         /// 监听客户端请求的方法
@@ -109,7 +119,7 @@ namespace MyChatRoomServer
                 threadCommunicate.Start(socketConnection);//
 
                 dictThread.Add(socketConnection.RemoteEndPoint.ToString(), threadCommunicate);
-                
+
 
 
                 //ShowMsg("客户端连接成功！" + socketConnection.RemoteEndPoint.ToString());
@@ -129,9 +139,28 @@ namespace MyChatRoomServer
                 byte[] arrMsgRev = new byte[1024 * 1024 * 2];
                 //将接收到的数据存入arrMsgRev,并返回真正接收到数据的长度
                 int length = socketClient.Receive(arrMsgRev);
-                //此时是将数组的所有元素（每个字节）都转成字符串，而真正接收到只有服务端发来的几个字符
-                string strMsgReceive = Encoding.UTF8.GetString(arrMsgRev, 0, length);
-                ShowMsg(strMsgReceive);
+                if (arrMsgRev[0] == 0) //判断客户端发送过来数据的第一位元素是0，代表文字
+                {
+                    //此时是将数组的所有元素（每个字节）都转成字符串，而真正接收到只有服务端发来的几个字符
+                    string strMsgReceive = Encoding.UTF8.GetString(arrMsgRev, 1, length - 1);
+                    ShowMsg(strMsgReceive);
+                }
+                else if (arrMsgRev[0] == 1)//1代表文件
+                {
+                    //保存文件对话框对象
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        //获取文件将要保存的路径
+                        string fileSavePath = sfd.FileName;
+                        //创建文件流，让文件流根据路径创建一个文件
+                        using (FileStream fs = new FileStream(fileSavePath, FileMode.Create))
+                        {
+                            fs.Write(arrMsgRev, 1, length);
+                            ShowMsg("文件保存成功: " + fileSavePath);
+                        }
+                    }
+                }
             }
         }
 
@@ -140,8 +169,7 @@ namespace MyChatRoomServer
             txtMsg.AppendText(msg + "\r\n");
         }
 
-        
 
-        
+
     }
 }

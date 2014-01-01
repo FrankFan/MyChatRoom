@@ -56,7 +56,7 @@
             this.txtIP.Name = "txtIP";
             this.txtIP.Size = new System.Drawing.Size(100, 21);
             this.txtIP.TabIndex = 1;
-            this.txtIP.Text = "192.168.105.114";
+            this.txtIP.Text = "192.168.0.103";
             // 
             // label2
             // 
@@ -103,7 +103,7 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(452, 341);
+            this.btnSend.Location = new System.Drawing.Point(452, 320);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(75, 23);
             this.btnSend.TabIndex = 5;
@@ -131,7 +131,7 @@
             // 
             // btnSendToAll
             // 
-            this.btnSendToAll.Location = new System.Drawing.Point(342, 341);
+            this.btnSendToAll.Location = new System.Drawing.Point(452, 353);
             this.btnSendToAll.Name = "btnSendToAll";
             this.btnSendToAll.Size = new System.Drawing.Size(75, 23);
             this.btnSendToAll.TabIndex = 5;

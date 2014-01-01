@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.IO;
 
 namespace MyChatRoomClient
 {
@@ -23,6 +24,8 @@ namespace MyChatRoomClient
         public FChatRoomClient()
         {
             InitializeComponent();
+            //关闭对文本框跨线程操作的检查
+            TextBox.CheckForIllegalCrossThreadCalls = false;
         }
 
         //连接服务器
@@ -42,13 +45,55 @@ namespace MyChatRoomClient
             threadClient.Start();
         }
 
-        //向服务器发送数据
-        private void btnSend_Click(object sender, EventArgs e)
+        //向服务器发送文本消息
+        private void btnSendMsg_Click(object sender, EventArgs e)
         {
             string strMsg = txtMsgSend.Text.Trim();
-            byte[] arrMsg = Encoding.UTF8.GetBytes(strMsg);//将字符串转成方便网络传送的二进制数组
-            socketClient.Send(arrMsg);
+            //将字符串转成方便网络传送的二进制数组
+            byte[] arrMsg = Encoding.UTF8.GetBytes(strMsg);
+            byte[] arrMsgSend = new byte[arrMsg.Length + 1];
+            arrMsgSend[0] = 0;//设置标识位，0代表发送的是文字
+            Buffer.BlockCopy(arrMsg, 0, arrMsgSend, 1, arrMsg.Length);
+            socketClient.Send(arrMsgSend);
             ShowMsg(string.Format("我说：{0}", strMsg));
+
+        }
+
+        private void btnChooseFile_Click(object sender, EventArgs e)
+        {
+            //选择要发送的文件
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                txtFilePath.Text = ofd.FileName;
+            }
+        }
+
+        //客户端向服务器发送文件
+        private void btnSendFile_Click(object sender, EventArgs e)
+        {
+            //用文件流打开用户选择的文件
+            using (FileStream fs = new FileStream(txtFilePath.Text, FileMode.Open))
+            {
+                //定义一个4M的数组（缓冲区）
+                byte[] arrFile = new byte[1024 * 1024 * 2];
+                //将文件数据读到数组arrFile中，并获取文件的真实长度
+                int length = fs.Read(arrFile, 0, arrFile.Length);
+                byte[] arrFileSend = new byte[arrFile.Length + 1];//用于发送真实数据的数组，
+                arrFileSend[0] = 1;//第一位是协议位，1：文件 0：文字
+                //for (int i = 0; i < length; i++) //将数据拷贝到真实数组中
+                //{
+                //    arrFileSend[i + 1] = arrFile[i];
+                //}
+                //2.直接拷贝,不能指定其实元素位置offset
+                //arrFile.CopyTo(arrFileSend, length);
+                //3.
+                Buffer.BlockCopy(arrFile, 0, arrFileSend, 1, length);
+                //发送包含了标识位的新数据数组到服务端
+                socketClient.Send(arrFileSend);
+
+            }
+
 
         }
 
@@ -73,6 +118,10 @@ namespace MyChatRoomClient
                 ShowMsg(strMsgReceive);
             }
         }
+
+
+
+
 
 
     }
