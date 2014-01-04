@@ -44,7 +44,21 @@ namespace MyChatRoomServer
             //创建包含IP和port的网络节点对象
             IPEndPoint endpoint = new IPEndPoint(address, int.Parse(txtPort.Text.Trim()));
             //将负责监听的套接字绑定到唯一的IP和端口上
-            socketWatch.Bind(endpoint);
+            try
+            {
+                socketWatch.Bind(endpoint);
+            }
+            catch (SocketException ex)
+            {
+                ShowMsg("绑定IP时出现异常：" + ex.Message);
+                return;
+            }
+            catch (Exception ex)
+            {
+                ShowMsg("绑定IP时出现异常：" + ex.Message);
+                return;
+            }
+
             //设置监听队列的长度
             socketWatch.Listen(10);
 
@@ -72,11 +86,21 @@ namespace MyChatRoomServer
 
                 //获得列表中选中的远程IP的Key
                 string strClientKey = lbOnline.Text;
-                //通过key找到字典集合中对应的某个客户端通信的套接字，用Send方法发送数据给对方
-                dict[strClientKey].Send(arrMsg);
+                try
+                {
+                    //通过key找到字典集合中对应的某个客户端通信的套接字，用Send方法发送数据给对方
+                    dict[strClientKey].Send(arrMsg);
 
-                //socketConnection.Send(arrMsg);
-                ShowMsg(string.Format("对 {0} 说： {1}", strClientKey, strMsg));
+                    ShowMsg(string.Format("对 {0} 说： {1}", strClientKey, strMsg));
+                }
+                catch (SocketException ex)
+                {
+                    ShowMsg("发送时出现异常：" + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    ShowMsg("发送时出现异常：" + ex.Message);
+                }                
             }
         }
 
@@ -88,9 +112,23 @@ namespace MyChatRoomServer
             byte[] arrMsg = Encoding.UTF8.GetBytes(strMsg);
             foreach (Socket s in dict.Values)
             {
-                s.Send(arrMsg);
+                try
+                {
+                    s.Send(arrMsg);
+                    ShowMsg("群发完毕~ :)");
+                }
+                catch (SocketException ex)
+                {
+                    ShowMsg("服务端群发时出现异常：" + ex.Message);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    ShowMsg("服务端群发时出现异常：" + ex.Message);
+                    break;
+                }
             }
-            ShowMsg("群发完毕~ :)");
+            
         }
 
 
@@ -102,9 +140,23 @@ namespace MyChatRoomServer
             //持续不断的监听客户端的新的连接请求
             while (true)
             {
-                //开始监听请求，返回一个新的负责连接的套接字，负责和该客户端通信
-                //注意：Accept方法会阻断当前线程！
-                Socket socketConnection = socketWatch.Accept();
+                Socket socketConnection = null;
+                try
+                {
+                    //开始监听请求，返回一个新的负责连接的套接字，负责和该客户端通信
+                    //注意：Accept方法会阻断当前线程！
+                    socketConnection = socketWatch.Accept();
+                }
+                catch (SocketException ex)
+                {
+                    ShowMsg("服务端连接时发生异常：" + ex.Message);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    ShowMsg("服务端连接时发生异常：" + ex.Message);
+                    break;
+                }
 
                 //当有新的socket连接到服务端时就将IP添加到在线列表中,作为客户端的唯一标识                
                 lbOnline.Items.Add(socketConnection.RemoteEndPoint.ToString());
@@ -116,13 +168,10 @@ namespace MyChatRoomServer
                 //创建通信线程
                 Thread threadCommunicate = new Thread(ReceiveMsg);
                 threadCommunicate.IsBackground = true;
-                threadCommunicate.Start(socketConnection);//
+                threadCommunicate.Start(socketConnection);//有传入参数的线程
 
                 dictThread.Add(socketConnection.RemoteEndPoint.ToString(), threadCommunicate);
 
-
-
-                //ShowMsg("客户端连接成功！" + socketConnection.RemoteEndPoint.ToString());
                 ShowMsg(string.Format("{0} 上线了. ", socketConnection.RemoteEndPoint.ToString()));
             }
         }
@@ -138,7 +187,27 @@ namespace MyChatRoomServer
                 //定义一个接收消息用的字节数组缓冲区（2M大小）
                 byte[] arrMsgRev = new byte[1024 * 1024 * 2];
                 //将接收到的数据存入arrMsgRev,并返回真正接收到数据的长度
-                int length = socketClient.Receive(arrMsgRev);
+                int length = -1;
+                try
+                {
+                    length = socketClient.Receive(arrMsgRev);
+                }
+                catch (SocketException ex)
+                {
+                    ShowMsg("异常：" + ex.Message+", RemoteEndPoint: "+socketClient.RemoteEndPoint.ToString());
+                    //从通信套接字结合中删除被中断连接的通信套接字
+                    dict.Remove(socketClient.RemoteEndPoint.ToString());
+                    //从通信线程集合中删除被中断连接的通信线程对象
+                    dictThread.Remove(socketClient.RemoteEndPoint.ToString());
+                    //从显示列表中移除被中断连接的IP:Port
+                    lbOnline.Items.Remove(socketClient.RemoteEndPoint.ToString());
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    ShowMsg("异常：" + ex.Message);
+                    break;
+                }
                 if (arrMsgRev[0] == 0) //判断客户端发送过来数据的第一位元素是0，代表文字
                 {
                     //此时是将数组的所有元素（每个字节）都转成字符串，而真正接收到只有服务端发来的几个字符
@@ -149,17 +218,19 @@ namespace MyChatRoomServer
                 {
                     //保存文件对话框对象
                     SaveFileDialog sfd = new SaveFileDialog();
-                    if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    //*****此处很重要，由于线程安全原因，必须加上this才能打开对话框，切记~！！浪费2个小时！！！
+                    if (sfd.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                     {
                         //获取文件将要保存的路径
                         string fileSavePath = sfd.FileName;
                         //创建文件流，让文件流根据路径创建一个文件
                         using (FileStream fs = new FileStream(fileSavePath, FileMode.Create))
                         {
-                            fs.Write(arrMsgRev, 1, length);
+                            fs.Write(arrMsgRev, 1, length - 1);
                             ShowMsg("文件保存成功: " + fileSavePath);
                         }
                     }
+
                 }
             }
         }

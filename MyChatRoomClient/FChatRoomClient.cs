@@ -37,8 +37,19 @@ namespace MyChatRoomClient
             IPEndPoint endpoint = new IPEndPoint(address, int.Parse(txtPort.Text.Trim()));
             //创建客户端套接字，负责连接服务器
             socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            //客户端连接到服务器
-            socketClient.Connect(endpoint);
+            try
+            {
+                //客户端连接到服务器
+                socketClient.Connect(endpoint);
+            }
+            catch (SocketException ex)
+            {
+                ShowMsg("客户端连接服务器发生异常：" + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                ShowMsg("客户端连接服务器发生异常：" + ex.Message);
+            }
 
             threadClient = new Thread(ReceiveMsg);
             threadClient.IsBackground = true;
@@ -54,9 +65,20 @@ namespace MyChatRoomClient
             byte[] arrMsgSend = new byte[arrMsg.Length + 1];
             arrMsgSend[0] = 0;//设置标识位，0代表发送的是文字
             Buffer.BlockCopy(arrMsg, 0, arrMsgSend, 1, arrMsg.Length);
-            socketClient.Send(arrMsgSend);
-            ShowMsg(string.Format("我说：{0}", strMsg));
+            try
+            {
+                socketClient.Send(arrMsgSend);
 
+                ShowMsg(string.Format("我说：{0}", strMsg));
+            }
+            catch (SocketException ex)
+            {
+                ShowMsg("客户端发送消息时发生异常：" + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                ShowMsg("客户端发送消息时发生异常：" + ex.Message);
+            }
         }
 
         private void btnChooseFile_Click(object sender, EventArgs e)
@@ -79,8 +101,10 @@ namespace MyChatRoomClient
                 byte[] arrFile = new byte[1024 * 1024 * 2];
                 //将文件数据读到数组arrFile中，并获取文件的真实长度
                 int length = fs.Read(arrFile, 0, arrFile.Length);
-                byte[] arrFileSend = new byte[arrFile.Length + 1];//用于发送真实数据的数组，
-                arrFileSend[0] = 1;//第一位是协议位，1：文件 0：文字
+                //用于发送真实数据的数组，多了一位标识位
+                byte[] arrFileSend = new byte[length + 1];
+                //第一位是协议位，1：文件 0：文字
+                arrFileSend[0] = 1;
                 //for (int i = 0; i < length; i++) //将数据拷贝到真实数组中
                 //{
                 //    arrFileSend[i + 1] = arrFile[i];
@@ -91,10 +115,7 @@ namespace MyChatRoomClient
                 Buffer.BlockCopy(arrFile, 0, arrFileSend, 1, length);
                 //发送包含了标识位的新数据数组到服务端
                 socketClient.Send(arrFileSend);
-
             }
-
-
         }
 
         void ShowMsg(string msg)
@@ -112,7 +133,22 @@ namespace MyChatRoomClient
                 //定义一个接收消息用的字节数组缓冲区（2M大小）
                 byte[] arrMsgRev = new byte[1024 * 1024 * 2];
                 //将接收到的数据存入arrMsgRev,并返回真正接收到数据的长度
-                int length = socketClient.Receive(arrMsgRev);
+                int length = -1;
+                try
+                {
+                    length = socketClient.Receive(arrMsgRev);
+                }
+                catch (SocketException ex)
+                {
+                    ShowMsg("客户端接收消息时发生异常：" + ex.Message);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    ShowMsg("客户端接收消息时发生异常：" + ex.Message);
+                    break;
+                }
+
                 //此时是将数组的所有元素（每个字节）都转成字符串，而真正接收到只有服务端发来的几个字符
                 string strMsgReceive = Encoding.UTF8.GetString(arrMsgRev, 0, length);
                 ShowMsg(strMsgReceive);
