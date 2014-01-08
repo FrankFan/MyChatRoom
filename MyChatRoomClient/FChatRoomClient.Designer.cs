@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FChatRoomClient));
             this.btnConnect = new System.Windows.Forms.Button();
             this.txtPort = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -156,6 +157,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtIP);
             this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FChatRoomClient";
             this.Text = "聊天程序客户端";
             this.ResumeLayout(false);

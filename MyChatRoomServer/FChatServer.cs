@@ -91,7 +91,9 @@ namespace MyChatRoomServer
                     //通过key找到字典集合中对应的某个客户端通信的套接字，用Send方法发送数据给对方
                     dict[strClientKey].Send(arrMsg);
 
-                    ShowMsg(string.Format("对 {0} 说： {1}", strClientKey, strMsg));
+                    ShowMsg(string.Format("我对 {0} 说： {1}", strClientKey, strMsg));
+                    //清空发送框中的消息
+                    this.txtMsgSend.Text = "";
                 }
                 catch (SocketException ex)
                 {
@@ -212,7 +214,7 @@ namespace MyChatRoomServer
                 {
                     //此时是将数组的所有元素（每个字节）都转成字符串，而真正接收到只有服务端发来的几个字符
                     string strMsgReceive = Encoding.UTF8.GetString(arrMsgRev, 1, length - 1);
-                    ShowMsg(strMsgReceive);
+                    ShowMsg(string.Format("{0} 对我说：{1}", socketClient.RemoteEndPoint.ToString(), strMsgReceive));
                 }
                 else if (arrMsgRev[0] == 1)//1代表文件
                 {

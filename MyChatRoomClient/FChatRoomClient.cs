@@ -69,7 +69,9 @@ namespace MyChatRoomClient
             {
                 socketClient.Send(arrMsgSend);
 
-                ShowMsg(string.Format("我说：{0}", strMsg));
+                ShowMsg(string.Format("我对 {0} 说：{1}", socketClient.RemoteEndPoint.ToString(), strMsg));
+                //清空发送消息文本框中的消息
+                this.txtMsgSend.Text = "";
             }
             catch (SocketException ex)
             {
@@ -151,7 +153,7 @@ namespace MyChatRoomClient
 
                 //此时是将数组的所有元素（每个字节）都转成字符串，而真正接收到只有服务端发来的几个字符
                 string strMsgReceive = Encoding.UTF8.GetString(arrMsgRev, 0, length);
-                ShowMsg(strMsgReceive);
+                ShowMsg(string.Format("{0} 对我说：{1}", socketClient.RemoteEndPoint.ToString(), strMsgReceive));
             }
         }
 
