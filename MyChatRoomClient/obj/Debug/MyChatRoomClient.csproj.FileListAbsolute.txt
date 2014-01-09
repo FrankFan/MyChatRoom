@@ -1,8 +1,0 @@
-E:\DevCenter\AllMyPoject\MyChatRoom\MyChatRoomClient\bin\Debug\MyChatRoomClient.exe
-E:\DevCenter\AllMyPoject\MyChatRoom\MyChatRoomClient\bin\Debug\MyChatRoomClient.pdb
-E:\DevCenter\AllMyPoject\MyChatRoom\MyChatRoomClient\obj\Debug\MyChatRoomClient.csprojResolveAssemblyReference.cache
-E:\DevCenter\AllMyPoject\MyChatRoom\MyChatRoomClient\obj\Debug\MyChatRoomClient.FChatRoomClient.resources
-E:\DevCenter\AllMyPoject\MyChatRoom\MyChatRoomClient\obj\Debug\MyChatRoomClient.Properties.Resources.resources
-E:\DevCenter\AllMyPoject\MyChatRoom\MyChatRoomClient\obj\Debug\MyChatRoomClient.csproj.GenerateResource.Cache
-E:\DevCenter\AllMyPoject\MyChatRoom\MyChatRoomClient\obj\Debug\MyChatRoomClient.exe
-E:\DevCenter\AllMyPoject\MyChatRoom\MyChatRoomClient\obj\Debug\MyChatRoomClient.pdb
